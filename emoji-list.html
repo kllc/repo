@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Emoji List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+      }
+      a {
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <v-app v-show="load" style="display: none">
+        <v-main class="grey lighten-5">
+          <v-container fluid>
+            <div class="py-4"></div>
+            <h2
+              class="display-2 font-weight-bold mb-2 text-uppercase text-center"
+            >
+              emoji
+            </h2>
+
+            <v-container>
+              <table>
+                <tr
+                  v-for="(item,index) in emojis"
+                  style="cursor: pointer"
+                  @click="copy_to_clipboard(item)"
+                >
+                  <td>
+                    <img
+                      border="0"
+                      :src="item"
+                      width="36"
+                      height="36"
+                      style="display: inline"
+                    />
+                  </td>
+                  <td>{{item}}</td>
+                </tr>
+              </table>
+            </v-container>
+          </v-container>
+        </v-main>
+      </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+
+    <script type="module">
+      import emoji from "https://kllc.github.io/repo/script/emoji.js";
+
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data() {
+          return {
+            load: false,
+            emojis: emoji(),
+          };
+        },
+        async mounted() {
+          this.load = true;
+        },
+        methods: {
+          copy_to_clipboard(value) {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(value).then(function () {
+                alert("コピーしました。");
+              });
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
