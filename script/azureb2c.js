@@ -46,7 +46,7 @@ async function pkceChallengeFromVerifier(v) {
   return base64encoded;
 }
 
-export class adb2cal {
+export class Adb2cal {
   login_url;
   authorize_url;
   client_id;
