@@ -1,5 +1,3 @@
-const axios = import("lib/axios.min.js");
-
 // クッキーを連想配列に格納
 function getCookieArray() {
   const arr = [];
@@ -35,12 +33,7 @@ function base64urlencode(a) {
   // Then convert the base64 encoded to base64url encoded.
   // (replace + with -, replace / with _, trim trailing =)
 
-  // return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
-  return Buffer.from(
-    String.fromCharCode.apply(null, new Uint8Array(a)),
-    "utf-8"
-  )
-    .toString("base64")
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/, "");
@@ -61,7 +54,7 @@ export default class {
   scope;
   host;
   token_url;
-  code_verifier_max_age = "60";
+  code_verifier_max_age = 60;
 
   // tokenからuserid取り出し
   user_id() {
@@ -70,7 +63,7 @@ export default class {
   }
 
   // refresh_tokenを取得する
-  refresh_token() {
+  get_refresh_token() {
     const cookieArray = getCookieArray();
 
     if (cookieArray["refresh.token"]) {
@@ -82,14 +75,14 @@ export default class {
   }
 
   // id_tokenを取得する
-  async id_token() {
+  async get_id_token() {
     const cookieArray = getCookieArray();
 
     if (cookieArray["id.token"]) {
       return cookieArray["id.token"];
     }
     if (cookieArray["refresh.token"]) {
-      return await this.get_id_token(cookieArray["refresh.token"]);
+      return await this.refresh_id_token(cookieArray["refresh.token"]);
     } else {
       // リフレッシュトークンがないとき
       return false;
@@ -97,7 +90,7 @@ export default class {
   }
 
   // id_tokenをリフレッシュする
-  async get_id_token(refreshToken) {
+  async refresh_id_token(refreshToken) {
     let postData = "grant_type=refresh_token";
     postData += "&client_id=";
     postData += this.client_id;
@@ -105,35 +98,55 @@ export default class {
     postData += "&refresh_token=";
     postData += refreshToken;
 
-    const headers = {
+    return await this.get_token(postData);
+  }
+
+  // codeからtokenを取得する
+  async set_token(code) {
+    const cookieArray = getCookieArray();
+
+    let postData = "grant_type=authorization_code";
+    postData += "&client_id=";
+    postData += this.client_id;
+    postData += "&scope=openid";
+    postData += "&code=";
+    postData += code;
+    postData += "&redirect_uri=";
+    postData += this.redirect_url;
+    postData += "&code_verifier=";
+    postData += cookieArray["code.verifier"];
+
+    await this.get_token(postData);
+  }
+
+  // postしてtokenを取得する
+  async get_token(postData) {
+    const opt = {
+      method: "POST",
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
-        host: this.host,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: postData,
     };
 
-    const res = await axios
-      .post(this.token_url, postData, headers)
-      .catch(() => {
-        return false;
-      });
-
-    if (res.status === 200) {
+    const res = await fetch(this.token_url, opt);
+    if (res.ok) {
+      const data = await res.json();
       document.cookie =
         "refresh.token = " +
-        res.data.refresh_token +
+        data.refresh_token +
         "; Max-Age=" +
-        res.data.refresh_token_expires_in +
+        data.refresh_token_expires_in +
         "; Path=/" +
         ";";
       document.cookie =
         "id.token = " +
-        res.data.id_token +
+        data.id_token +
         "; Max-Age=" +
-        res.data.id_token_expires_in +
+        data.id_token_expires_in +
         "; Path=/" +
         ";";
-      return res.data.id_token;
+      return data.id_token;
     } else {
       return false;
     }
@@ -141,7 +154,7 @@ export default class {
 
   // id_tokenを取得してconfigを設定
   config() {
-    const idToken = this.id_token();
+    const idToken = this.get_id_token();
     if (idToken) {
       const config = {
         headers: {
