@@ -1,7 +1,7 @@
-const axios = await import("lib/axios.min.js");
+const axios = import("lib/axios.min.js");
 
 // クッキーを連想配列に格納
-function get_cookie_array() {
+function getCookieArray() {
   const arr = [];
   if (document.cookie !== "") {
     const tmp = document.cookie.split("; ");
@@ -14,7 +14,7 @@ function get_cookie_array() {
 }
 
 // tokenのdecode
-function decode_jwt(token) {
+function decodeJwt(token) {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   return JSON.parse(decodeURIComponent(escape(window.atob(base64))));
@@ -47,7 +47,7 @@ function base64urlencode(a) {
 }
 
 // pkce callenge生成
-async function pkce_challenge_from_verifier(v) {
+async function pkceChallengeFromVerifier(v) {
   const hashed = await sha256(v);
   const base64encoded = base64urlencode(hashed);
   return base64encoded;
@@ -65,13 +65,13 @@ export default class {
 
   // tokenからuserid取り出し
   user_id() {
-    const cookieArray = this.get_cookie_array();
-    return decode_jwt(cookieArray["id.token"]).emails[0];
+    const cookieArray = this.getCookieArray();
+    return decodeJwt(cookieArray["id.token"]).emails[0];
   }
 
   // refresh_tokenを取得する
   refresh_token() {
-    const cookieArray = get_cookie_array();
+    const cookieArray = getCookieArray();
 
     if (cookieArray["refresh.token"]) {
       return cookieArray["refresh.token"];
@@ -83,7 +83,7 @@ export default class {
 
   // id_tokenを取得する
   async id_token() {
-    const cookieArray = get_cookie_array();
+    const cookieArray = getCookieArray();
 
     if (cookieArray["id.token"]) {
       return cookieArray["id.token"];
@@ -114,7 +114,7 @@ export default class {
 
     const res = await axios
       .post(this.token_url, postData, headers)
-      .catch((err) => {
+      .catch(() => {
         return false;
       });
 
@@ -159,7 +159,7 @@ export default class {
     const rnd = Math.random().toString(32).substring(2);
 
     // codeVerifierはrndそのままでもいいが、変換しておく
-    const codeVerifier = await pkce_challenge_from_verifier(rnd);
+    const codeVerifier = await pkceChallengeFromVerifier(rnd);
 
     document.cookie =
       "code.verifier=" +
@@ -169,7 +169,7 @@ export default class {
       "; Path=/" +
       ";";
 
-    const codeChallenge = await pkce_challenge_from_verifier(codeVerifier);
+    const codeChallenge = await pkceChallengeFromVerifier(codeVerifier);
 
     return codeChallenge;
   }
