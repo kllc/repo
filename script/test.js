@@ -1,7 +1,7 @@
 // render-text-to-body.js
 
 // 公開したい関数を定義
-const renderTextToBody = (text) => {
+const RenderTextToBody = (text) => {
   const div = document.createElement("div");
   const p = document.createElement("p");
   const textNode = document.createTextNode(text);
@@ -11,4 +11,4 @@ const renderTextToBody = (text) => {
 };
 
 // 定義した関数を公開
-export default renderTextToBody;
+export default RenderTextToBody;
