@@ -1,14 +1,25 @@
-// render-text-to-body.js
+(function (root, factory) {
+  if (typeof define === "function" && define.amd) {
+    // AMD
+    define(["myModule", "myOtherModule"], factory);
+  } else if (typeof exports === "object") {
+    // CommonJS
+    module.exports = factory(require("myModule"), require("myOtherModule"));
+  } else {
+    // Browser globals (Note: root is window)
+    root.returnExports = factory(root.myModule, root.myOtherModule);
+  }
+})(this, function (myModule, myOtherModule) {
+  // Methods
+  function notHelloOrGoodbye() {} // A private method
+  function hello() {
+    alert(1);
+  } // A public method because it's returned (see below)
+  function goodbye() {} // A public method because it's returned (see below)
 
-// 公開したい関数を定義
-const RenderTextToBody = (text) => {
-  const div = document.createElement("div");
-  const p = document.createElement("p");
-  const textNode = document.createTextNode(text);
-  p.appendChild(textNode);
-  div.appendChild(p);
-  document.body.appendChild(div);
-};
-
-// 定義した関数を公開
-export default RenderTextToBody;
+  // Exposed public methods
+  return {
+    Hello: hello,
+    Goodbye: goodbye,
+  };
+});
