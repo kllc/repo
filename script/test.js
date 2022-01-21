@@ -19,7 +19,7 @@
 
   // Exposed public methods
   return {
-    Hello: hello,
-    Goodbye: goodbye,
+    hello: hello,
+    goodbye: goodbye,
   };
 });
