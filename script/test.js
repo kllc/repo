@@ -24,6 +24,21 @@
 //   };
 // });
 
+// (function (global, factory) {
+//   typeof exports === "object" && typeof module !== "undefined"
+//     ? (module.exports = factory())
+//     : typeof define === "function" && define.amd
+//     ? define(factory)
+//     : (global.tinylib = factory());
+// })(this, function () {
+//   //  -----------------------------------------mylibrary code start------------------
+//   var tinylib = function () {
+//     alert(1);
+//     //  -----------------------------------------mylibrary code end------------------
+//   };
+//   return tinylib;
+// });
+
 /* eslint-disable */
 
 (function (global, factory) {
@@ -32,13 +47,9 @@
   } else if (typeof exports !== "undefined") {
     factory(exports);
   } else {
-    var mod = {
-      exports: {},
-    };
-    factory(mod.exports);
-    global.adb2cal = mod.exports;
+    global.adb2cal = factory();
   }
-})(this, function (exports) {
+})(this, function () {
   ("use strict");
   /* eslint-enable */
   // 通常のbabelでコンパイルされたものがここに入る
@@ -259,5 +270,5 @@
 
   //  -----------------------------------------mylibrary code end------------------
 
-  export default adb2cal;
+  return adb2cal;
 });
