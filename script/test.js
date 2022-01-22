@@ -259,5 +259,5 @@
 
   //  -----------------------------------------mylibrary code end------------------
 
-  return adb2cal;
+  export default adb2cal;
 });
