@@ -24,14 +24,25 @@
 //   };
 // });
 
+/* eslint-disable */
+
 (function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined"
-    ? (module.exports = factory())
-    : typeof define === "function" && define.amd
-    ? define(factory)
-    : (global.adb2cal = factory());
-})(this, function () {
-  //  -----------------------------------------mylibrary code start------------------
+  if (typeof define === "function" && define.amd) {
+    define(["exports"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(exports);
+  } else {
+    var mod = {
+      exports: {},
+    };
+    factory(mod.exports);
+    global.adb2cal = mod.exports;
+  }
+})(this, function (exports) {
+  ("use strict");
+  /* eslint-enable */
+  // 通常のbabelでコンパイルされたものがここに入る
+
   // クッキーを連想配列に格納
   function getCookieArray() {
     const arr = [];
@@ -80,7 +91,7 @@
     return base64encoded;
   }
 
-  export class adb2cal {
+  class adb2cal {
     login_url;
     authorize_url;
     client_id;
@@ -247,5 +258,6 @@
   }
 
   //  -----------------------------------------mylibrary code end------------------
+
   return adb2cal;
 });
