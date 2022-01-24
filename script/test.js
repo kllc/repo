@@ -39,19 +39,15 @@
 //   return tinylib;
 // });
 
-/* eslint-disable */
-
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports"], factory);
   } else if (typeof exports !== "undefined") {
     factory(exports);
   } else {
-    global.adb2cal = factory();
+    global.Adb2cal = factory();
   }
 })(this, function () {
-  ("use strict");
-  /* eslint-enable */
   // 通常のbabelでコンパイルされたものがここに入る
 
   // クッキーを連想配列に格納
@@ -102,7 +98,7 @@
     return base64encoded;
   }
 
-  class adb2cal {
+  class Adb2cal {
     login_url;
     authorize_url;
     client_id;
@@ -270,5 +266,5 @@
 
   //  -----------------------------------------mylibrary code end------------------
 
-  return adb2cal;
+  return Adb2cal;
 });
