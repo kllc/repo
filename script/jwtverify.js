@@ -32,6 +32,18 @@ function isTokenValid(token, applicationId, issuerUri) {
   });
 }
 
+var atob = (base64) => {
+  var buffer = Buffer.from(base64, "base64");
+  var utf8 = buffer.toString("utf8"); // Not "ascii"
+  return utf8;
+};
+
+function decode_jwt(token) {
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  return JSON.parse(decodeURIComponent(escape(atob(base64))));
+}
+
 module.exports = class {
   b2cissuer;
   b2capplicationId;
@@ -46,8 +58,9 @@ module.exports = class {
 
   async jwt_verify(context, req) {
     try {
+      let bearerToken;
       if (req.headers.authorization != undefined) {
-        const bearerToken = req.headers.authorization.replace("Bearer ", "");
+        bearerToken = req.headers.authorization.replace("Bearer ", "");
         const validToken = await isTokenValid(
           bearerToken,
           this.b2capplicationId,
@@ -67,6 +80,7 @@ module.exports = class {
       }
       return {
         status: 200,
+        body: decode_jwt(bearerToken),
       };
     } catch (error) {
       context.log(JSON.stringify(error, null, 2));
