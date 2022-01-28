@@ -174,8 +174,8 @@
     }
 
     // id_tokenを取得してconfigを設定
-    config() {
-      const idToken = this.get_id_token();
+    async config() {
+      const idToken = await this.get_id_token();
       if (idToken) {
         const config = {
           headers: {
