@@ -137,7 +137,7 @@
       postData += "&code_verifier=";
       postData += cookieArray["code.verifier"];
 
-      await this.get_token(postData);
+      return await this.get_token(postData);
     }
 
     // postしてtokenを取得する
