@@ -82,7 +82,7 @@
     // tokenからuserid取り出し
     decode_token() {
       const cookieArray = getCookieArray();
-      return decodeJwt(cookieArray["id.token"]).emails[0];
+      return decodeJwt(cookieArray["id.token"]);
     }
 
     // refresh_tokenを取得する
