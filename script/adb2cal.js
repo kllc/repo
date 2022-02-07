@@ -80,8 +80,8 @@
     }
 
     // tokenからuserid取り出し
-    user_id() {
-      const cookieArray = this.getCookieArray();
+    decode_token() {
+      const cookieArray = getCookieArray();
       return decodeJwt(cookieArray["id.token"]).emails[0];
     }
 
