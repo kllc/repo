@@ -41,7 +41,9 @@ var atob = (base64) => {
 function decode_jwt(token) {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  return JSON.parse(decodeURIComponent(escape(atob(base64))));
+  const encodeURI = encodeURIComponent(atob(base64));
+  const decodeString = decodeURIComponent(encodeURI);
+  return JSON.parse(decodeString);
 }
 
 module.exports = class {
