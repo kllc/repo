@@ -18,8 +18,19 @@
   iframe.style.backgroundColor = "white";
   iframe.style.overflow = "hidden";
   iframe.style.borderRadius = "50%";
-  iframe.style.bottom = "50px";
-  iframe.style.right = "30px";
+
+  if (div.dataset.right) {
+    iframe.style.right = div.dataset.right;
+  } else {
+    iframe.style.right = "30px";
+  }
+
+  if (div.dataset.bottom) {
+    iframe.style.bottom = div.dataset.bottom;
+  } else {
+    iframe.style.bottom = "50px";
+  }
+
   iframe.style.width = "100px";
   iframe.style.height = "100px";
 
