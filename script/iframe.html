@@ -63,7 +63,7 @@
         },
         async mounted() {
           this.loop();
-          setInterval(this.loop(), 5000);
+          setInterval(this.loop, 5000);
         },
         methods: {
           go_zoom() {
