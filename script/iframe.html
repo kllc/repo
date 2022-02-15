@@ -26,7 +26,7 @@
     />
     <style>
       body {
-        font-family: 'Noto Sans JP', sans-serif;
+        font-family: "Noto Sans JP", sans-serif;
       }
     </style>
   </head>
@@ -51,45 +51,45 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script type="module">
-      const searchParams = new URLSearchParams(window.location.search)
+      const searchParams = new URLSearchParams(window.location.search);
 
       new Vue({
-        el: '#app',
+        el: "#app",
         vuetify: new Vuetify(),
         data() {
           return {
-            data: '',
-          }
+            data: "",
+          };
         },
         async mounted() {
-          this.loop
-          setInterval(this.loop, 5000)
+          this.loop();
+          setInterval(this.loop(), 5000);
         },
         methods: {
           go_zoom() {
-            window.open(this.data[0].zoomurl)
+            window.open(this.data[0].zoomurl);
           },
           async get_site() {
             const opt = {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                key: searchParams.get('key'),
+                key: searchParams.get("key"),
               }),
-            }
-            const res = await fetch('http://localhost:7071/api/get-site', opt)
-            return await res.json()
+            };
+            const res = await fetch("http://localhost:7071/api/get-site", opt);
+            return await res.json();
           },
           async loop() {
-            this.data = await this.get_site()
+            this.data = await this.get_site();
           },
         },
         computed: {},
         watch: {},
         destroyed() {},
-      })
+      });
     </script>
   </body>
 </html>
