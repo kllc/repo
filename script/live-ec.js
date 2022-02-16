@@ -3,7 +3,10 @@
   const iframe = document.createElement("iframe");
 
   iframe.src =
-    "https://kllc.github.io/repo/script/iframe.html?key=" + div.dataset.key;
+    "https://kllc.github.io/repo/script/iframe.html?key=" +
+    div.dataset.key +
+    "&icon=" +
+    div.dataset.icon;
 
   iframe.scrolling = "no";
   iframe.overflow = "hidden";
