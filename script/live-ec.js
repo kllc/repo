@@ -20,13 +20,13 @@
   iframe.style.borderRadius = "50%";
 
   if (div.dataset.right) {
-    iframe.style.right = div.dataset.right;
+    iframe.style.right = div.dataset.right + "px";
   } else {
     iframe.style.right = "30px";
   }
 
   if (div.dataset.bottom) {
-    iframe.style.bottom = div.dataset.bottom;
+    iframe.style.bottom = div.dataset.bottom + "px";
   } else {
     iframe.style.bottom = "50px";
   }
