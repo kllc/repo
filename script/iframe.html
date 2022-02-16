@@ -53,7 +53,10 @@
         vuetify: new Vuetify(),
         data() {
           return {
-            data: "",
+            data: {
+              status: false,
+              zoomurl: "",
+            },
             style:
               "width: 100px; height: 100px; font-size: 40px; color: white; background-color: white;",
             icon: searchParams.get("icon"),
@@ -86,7 +89,10 @@
             return await res.json();
           },
           async loop() {
-            this.data = await this.get_site();
+            const res = await this.get_site();
+            this.data = res.fillter((item) => {
+              return item.status;
+            });
           },
         },
         computed: {},
