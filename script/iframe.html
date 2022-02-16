@@ -33,7 +33,7 @@
   </head>
   <body>
     <div id="app">
-      <v-btn :disabled="!data" @click="go_zoom()" :style="style">
+      <v-btn :disabled="data.length==0" @click="go_zoom()" :style="style">
         <v-icon x-large>{{icon}}</v-icon>
       </v-btn>
     </div>
