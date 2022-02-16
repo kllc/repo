@@ -90,7 +90,7 @@
           },
           async loop() {
             const res = await this.get_site();
-            this.data = res.fillter((item) => {
+            this.data = res.filter((item) => {
               return item.status;
             });
           },
