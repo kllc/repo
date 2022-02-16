@@ -1,5 +1,5 @@
 (function () {
-  const div = document.getElementById("live-ec");
+  const div = document.getElementById(div.dataset.key);
   const iframe = document.createElement("iframe");
 
   iframe.src =
