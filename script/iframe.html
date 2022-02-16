@@ -79,7 +79,10 @@
                 key: searchParams.get("key"),
               }),
             };
-            const res = await fetch("http://localhost:7071/api/get-site", opt);
+            const res = await fetch(
+              "https://live-ec.azurewebsites.net/api/get-site",
+              opt
+            );
             return await res.json();
           },
           async loop() {
