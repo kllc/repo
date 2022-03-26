@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Encode</title>
+    <link rel="icon" href="https://kllc.github.io/repo/img/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <v-btn :disabled="data.length==0" @click="go_zoom()" :style="style">
+        <v-icon x-large>{{icon}}</v-icon>
+      </v-btn>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
+
+    <script type="module">
+      const apiBaseUrl = "http://localhost:7071";
+      // const apiBaseUrl = "https://live-ec.azurewebsites.net";
+      const searchParams = new URLSearchParams(window.location.search);
+
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data() {
+          return {
+            data: [],
+            style:
+              "width: 100px; height: 100px; font-size: 40px; color: white; background-color: white;",
+            icon: searchParams.get("icon"),
+          };
+        },
+        async mounted() {
+          this.style =
+            "width: 100px; height: 100px; font-size: 40px; color: white; background-color: indigo;";
+
+          // SingleR Connection 処理
+          const connection = new signalR.HubConnectionBuilder()
+            .withUrl(apiBaseUrl + "/api")
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+          connection.on("newMessage", (message) => {
+            // ここに message が来たときの処理を書く
+            // document.getElementById("messages").innerHTML = message;
+            alert(JSON.stringify(message));
+          });
+          await connection.start().catch(console.error);
+          if (connection.connectionId) {
+            await this.connect_site(connection.connectionId);
+          }
+        },
+        methods: {
+          go_zoom() {
+            window.open(this.data[0].zoomurl);
+          },
+          async connect_site(connectionID) {
+            const opt = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: connectionID,
+                key: searchParams.get("key"),
+              }),
+            };
+            const res = await fetch(apiBaseUrl + "/api/connect-site", opt);
+            return await res.json();
+          },
+        },
+        computed: {},
+        watch: {},
+        destroyed() {},
+      });
+    </script>
+  </body>
+</html>
