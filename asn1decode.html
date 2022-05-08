@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>公開鍵所有者に関する情報（1.2.392.100300.1.1.3）変換ツール</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/github-dark.min.css">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans JP", sans-serif;
+      }
+      code {
+        background: #222 !important;
+        color: #fff !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <v-app v-show="load" style="display: none">
+        <v-main>
+          <section id="blog">
+            <div class="py-4"></div>
+            <v-container>
+              <h1
+                class="
+                  display-1
+                  font-weight-bold
+                  text-uppercase text-center
+                  my-6
+                "
+              >
+              公開鍵所有者に関する情報（1.2.392.100300.1.1.3）変換ツール
+              </h2>
+              <v-row class="my-3">
+                <v-textarea
+                name="input1"
+                auto-grow
+                outlined                
+                rows="1"
+                solo
+                :label="hint"
+                v-model="byte"
+                @change="onchange"
+                hint="入力後、枠の外をクリック"
+              >
+            </v-row>
+            <v-row class="my-3">
+            </v-textarea>
+                <v-textarea
+                name="input1"
+                auto-grow
+                outlined
+                solo
+                rows="1"
+                v-model="string"
+              ></v-textarea>
+              </v-row>
+              <v-row class="my-3">
+                <v-container>
+                <pre><code class="javascript">
+// 公開鍵所有者に関する情報の文字列変換メイン処理
+function convert(str){
+    const byteStrArray = str.split(' ');
+    var utfString = ""
+    // 最初の3byteは不要
+    for (let i = 3;i < byteStrArray.length;i++){
+        switch (byteStrArray[i]){
+            // A0~A6が RegisteredCorporationInfoSyntax の0~6 に該当? (https://www.moj.go.jp/content/001216068.pdf#page=12)
+            // A0~A6の次のバイトはトータルの長さ?、A0~A6の次の次の次のバイトが各情報の長さ?
+            // そのため次のように処理してUTF-8に変換する
+            case 'A0':
+                utfString += '商号：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+            break;
+            case 'A1':
+                utfString += '会社法人番号：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+            break;
+            case 'A2':
+                utfString += '本店：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+            break;
+            case 'A3':
+              utfString += '資格：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+            break;
+            case 'A4':
+                utfString += '氏名：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+            break;
+            case 'A6':
+                utfString += '管轄登記所：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + ''
+            break;
+        }
+        i += 3 + parseInt(byteStrArray[i+3],16)
+    }
+    return utfString
+}
+
+// バイト配列のUTF-8変換処理
+function utf_decode(arr){
+    var byteArray =[]
+    for (elm of arr){
+        byteArray.push(parseInt(elm,16))
+    }
+    var text_decoder = new TextDecoder("utf-8");
+    return text_decoder.decode(Uint8Array.from(byteArray).buffer);
+}
+                </code></pre>
+                </v-container>
+              </v-row>
+            </v-container>
+            <div class="py-12"></div>
+          </section>
+      </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        // 公開鍵所有者に関する情報の文字列変換メイン処理
+        function convert(str){
+            const byteStrArray = str.split(' ');
+            var utfString = ""
+            for (let i = 3;i < byteStrArray.length;i++){
+                switch (byteStrArray[i]){
+                    case 'A0':
+                        utfString += '商号：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+                    break;
+                    case 'A1':
+                        utfString += '会社法人番号：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+                    break;
+                    case 'A2':
+                        utfString += '本店：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+                    break;
+                    case 'A3':
+                       utfString += '氏名：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+                    break;
+                    case 'A4':
+                        utfString += '資格：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + '\n'
+                    break;
+                    case 'A6':
+                        utfString += '管轄登記所：' + utf_decode(byteStrArray.slice(i+4,i+4+parseInt(byteStrArray[i+3],16))) + ''
+                    break;
+                }
+                i += 3 + parseInt(byteStrArray[i+3],16)
+            }
+            return utfString
+        }
+        // バイト配列のUTF-8変換処理
+        function utf_decode(arr){
+            var byteArray =[]
+            for (elm of arr){
+                byteArray.push(parseInt(elm,16))
+            }
+            var text_decoder = new TextDecoder("utf-8");
+            return text_decoder.decode(Uint8Array.from(byteArray).buffer);
+        }
+    </script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data() {
+          return {
+            load: false,
+            string:"",
+            byte:"",
+            hint:"30 81 9C A0 11 0C 0F EF BC AB E5 90 88 E5 90 8C E4 BC 9A E7 A4 BE A1 0E 13 0C 30 31 31 35 30 33 30 30 32 37 33 35 A2 35 0C 33 E6 9D B1 E4 BA AC E9 83 BD E4 B8 AD E9 87 8E E5 8C BA E6 9D B1 E4 B8 AD E9 87 8E E4 BA 94 E4 B8 81 E7 9B AE EF BC 91 EF BC 91 E7 95 AA EF BC 98 E5 8F B7 A3 0E 0C 0C E6 9C A8 E5 B3 B6 E5 9F BA E6 96 87 A4 0E 0C 0C E4 BB A3 E8 A1 A8 E7 A4 BE E5 93 A1 A6 20 0C 1E E6 9D B1 E4 BA AC E6 B3 95 E5 8B 99 E5 B1 80 E4 B8 AD E9 87 8E E5 87 BA E5 BC B5 E6 89 80"
+          };
+        },
+        mounted() {
+          this.load = true;
+        },
+        methods: {
+          onchange(){
+            this.string = convert(this.byte)
+          },
+        }
+      });
+    </script>
+  </body>
+</html>
