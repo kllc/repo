@@ -8,7 +8,7 @@
     global.ADB2CAL = factory();
   }
   /* eslint-enable */
-})(this, function () {
+})(typeof self !== "undefined" ? self : this, function () {
   // クッキーを連想配列に格納
   function getCookieArray() {
     const arr = [];
