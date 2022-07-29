@@ -1,4 +1,3 @@
 export default () => {
-  return '<a href="http://kllc.jp">KLLC</a>';
+  return 'Powered by <a href="https://livelp.net">Livelp.net</a>';
 };
-
