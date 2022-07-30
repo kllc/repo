@@ -1,5 +1,6 @@
 export default (plan) => {
   if (plan) {
+    alert(plan);
     switch (plan) {
       case "test":
         return 'Powered by <a href="https://livelp.net" target="_blank">Livelp</a>';
