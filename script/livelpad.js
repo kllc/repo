@@ -5,7 +5,7 @@ export default (plan) => {
         return 'Powered by <a href="https://livelp.net" target="_blank">Livelp</a>';
         break;
       default:
-        return 'Powered by <a href="https://livelp.net" target="_blank">Alive</a>';
+        return 'Powered by <a href="https://alivehub.net" target="_blank">Alive</a>';
         break;
     }
   } else {
